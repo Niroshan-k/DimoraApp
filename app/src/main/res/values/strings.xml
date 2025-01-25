@@ -2,4 +2,14 @@
     <string name="app_name">DimoraApp</string>
     <string name="sup">Sign up</string>
     <string name="sin">Sign in</string>
+
+    <string name="Heading1">Modern House</string>
+    <string name="Heading2">Modern h</string>
+    <string name="Heading3">Modern f</string>
+    <string name="Heading4">Modern v</string>
+
+    <string name="price1">$1,000,001</string>
+    <string name="price2">$1,000,002</string>
+    <string name="price3">$1,000,003</string>
+    <string name="price4">$1,000,004</string>
 </resources>

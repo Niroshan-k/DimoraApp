@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.dimoraapp.screens.GetStartedScreen
 import com.example.dimoraapp.screens.SignInScreen
 import com.example.dimoraapp.screens.SignUpScreen
+import com.example.dimoraapp.screens.HomeScreen
 
 @Composable
 fun AppNavigation() {
@@ -20,5 +21,6 @@ fun AppNavigation() {
         composable("getStarted") { GetStartedScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
         composable("signin") { SignInScreen(navController) }
+        composable("homescreen") { HomeScreen(navController) }
     }
 }

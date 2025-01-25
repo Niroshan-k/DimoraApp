@@ -108,7 +108,7 @@ fun SignInScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize()
         ) {
             FloatingActionButton(
-                onClick = { navController.navigate("signup") },
+                onClick = { navController.navigate("homescreen") },
                 containerColor = Color(0xFF28302B),
                 contentColor = Color.White,
                 modifier = Modifier
