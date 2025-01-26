@@ -9,6 +9,8 @@ import com.example.dimoraapp.screens.GetStartedScreen
 import com.example.dimoraapp.screens.SignInScreen
 import com.example.dimoraapp.screens.SignUpScreen
 import com.example.dimoraapp.screens.HomeScreen
+import com.example.dimoraapp.screens.InfoScreen
+import com.example.dimoraapp.screens.ProfileScreen
 
 @Composable
 fun AppNavigation() {
@@ -22,5 +24,7 @@ fun AppNavigation() {
         composable("signup") { SignUpScreen(navController) }
         composable("signin") { SignInScreen(navController) }
         composable("homescreen") { HomeScreen(navController) }
+        composable("infoscreen"){ InfoScreen(navController) }
+        composable("profilescreen"){ ProfileScreen(navController) }
     }
 }

@@ -12,4 +12,8 @@
     <string name="price2">$1,000,002</string>
     <string name="price3">$1,000,003</string>
     <string name="price4">$1,000,004</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="notifications">Notifications</string>
+    <string name="profile">Profile</string>
 </resources>

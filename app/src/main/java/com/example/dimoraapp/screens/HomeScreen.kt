@@ -7,18 +7,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,45 +32,44 @@ fun HomeScreen(navController: NavController) {
     var isDrawerOpen by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopNavBar(onMenuClick = { isDrawerOpen = true })
-            Spacer(modifier = Modifier.height(16.dp))
-            Heading("House")
-            Spacer(modifier = Modifier.height(16.dp))
-            PicturesApp(navController)
-            Spacer(modifier = Modifier.height(16.dp))
-            MoreButton(onClick = { /* Navigate to a new page */ })
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween // Ensures proper spacing
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                TopNavBar(onMenuClick = { isDrawerOpen = true })
+                Spacer(modifier = Modifier.height(16.dp))
+                Heading("House")
+                Spacer(modifier = Modifier.height(16.dp))
+                PicturesApp(navController)
+                Spacer(modifier = Modifier.height(16.dp))
+                MoreButton(onClick = { /* Navigate to a new page */ })
+            }
+
+            BottomNavBar(navController = navController) // Positioned at the bottom
         }
 
         if (isDrawerOpen) {
-            SideNavBar(onClose = { isDrawerOpen = false }, onAboutUsClick = {
-                // Handle About Us button click
-                navController.navigate("about_us")
-            })
+            SideNavBar(
+                onClose = { isDrawerOpen = false },
+                onAboutUsClick = { navController.navigate("about_us") }
+            )
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopNavBar(onMenuClick: () -> Unit) {
     TopAppBar(
         title = {},
-        navigationIcon = {
+        actions = {
             IconButton(onClick = onMenuClick) {
                 Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menu",
-                    tint = Color(0xFF28302B)
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { /* Add your action for the bookmark icon */ }) {
-                Icon(
                     imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "Bookmark",
-                    tint = Color(0xFF28302B)
+                    contentDescription = "More Options",
+                    tint = Color(0xFF28302B),
                 )
             }
         },
@@ -79,6 +77,78 @@ fun TopNavBar(onMenuClick: () -> Unit) {
             containerColor = Color(0xFFEFEFE9)
         )
     )
+}
+
+@Composable
+fun BottomNavBar(navController: NavController) {
+    NavigationBar(
+        containerColor = Color(0xFFEFEFE9)
+    ) {
+        NavigationBarItem(
+            icon = {
+                Icon(Icons.Filled.Home, contentDescription = "Home")
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.home),
+                    fontWeight = FontWeight.Bold)
+            },
+            selected = false,
+            onClick = { navController.navigate("home") }
+        )
+
+        NavigationBarItem(
+            icon = {
+                Icon(Icons.Filled.Search, contentDescription = "Search")
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.search),
+                    fontWeight = FontWeight.Bold)
+            },
+            selected = false,
+            onClick = { navController.navigate("search") }
+        )
+
+        NavigationBarItem(
+            icon = {
+                Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.notifications),
+                    fontWeight = FontWeight.Bold)
+            },
+            selected = false,
+            onClick = { navController.navigate("notifications") }
+        )
+
+        NavigationBarItem(
+            icon = {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(Color.LightGray, CircleShape), // Background circle
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.image1),
+                        contentDescription = "Profile",
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape) // Ensures the image is circular
+                    )
+                }
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.profile),
+                    fontWeight = FontWeight.Bold)
+                },
+            selected = false,
+            onClick = { navController.navigate("profilescreen") }
+        )
+    }
 }
 
 @Composable
@@ -173,7 +243,7 @@ fun PictureList(pictureList: List<Picture>, navController: NavController, modifi
             PictureCard(
                 picture = pictureList[index],
                 onClick = {
-                    navController.navigate("") // Pass picture ID
+                    navController.navigate("infoscreen")
                 }
             )
         }
@@ -212,7 +282,8 @@ fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
         modifier = Modifier
             .fillMaxHeight()
             .width(250.dp)
-            .background(Color(0xFFEFEFE9))
+            .background(Color(0xFFEFEFE9)),
+        contentAlignment = Alignment.TopEnd
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             IconButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) {
