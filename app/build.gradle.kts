@@ -59,4 +59,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.compose.material3:material3:<latest-version>")
+    implementation ("org.osmdroid:osmdroid-android:6.1.14")
+
 }
