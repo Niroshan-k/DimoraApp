@@ -9,3 +9,7 @@ data class Picture(
     @StringRes val price: Int
 )
 
+data class PictureInfo(
+    @DrawableRes val drawableResourseId: Int
+)
+

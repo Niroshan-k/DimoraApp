@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,29 +27,39 @@ import com.example.dimoraapp.ui.theme.DMserif
 import com.example.dimoraapp.R
 import com.example.dimoraapp.model.Picture
 import com.example.dimoraapp.data.Datasource
+import com.example.dimoraapp.navigation.BottomNavBar
+
 
 @Composable
 fun HomeScreen(navController: NavController) {
     var isDrawerOpen by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        // Content layout
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween // Ensures proper spacing
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                TopNavBar(onMenuClick = { isDrawerOpen = true })
-                Spacer(modifier = Modifier.height(16.dp))
-                Heading("House")
-                Spacer(modifier = Modifier.height(16.dp))
-                PicturesApp(navController)
-                Spacer(modifier = Modifier.height(16.dp))
-                MoreButton(onClick = { /* Navigate to a new page */ })
+            // LazyColumn for scrollable content
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f) // Take up remaining vertical space
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp) // Add spacing between items
+            ) {
+                item { TopNavBar(onMenuClick = { isDrawerOpen = true }) }
+                item { Heading("House") }
+                item { PicturesApp(navController) }
+                item { MoreButton(onClick = { /* Navigate to a new page */ }) }
+                item { Heading("Land") }
+                item { PicturesApp(navController) }
+                item { MoreButton(onClick = { /* Navigate to a new page */ }) }
             }
 
-            BottomNavBar(navController = navController) // Positioned at the bottom
+            // Bottom navigation bar
+            BottomNavBar(navController = navController)
         }
 
+        // Side drawer for navigation
         if (isDrawerOpen) {
             SideNavBar(
                 onClose = { isDrawerOpen = false },
@@ -57,6 +68,7 @@ fun HomeScreen(navController: NavController) {
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,77 +91,6 @@ fun TopNavBar(onMenuClick: () -> Unit) {
     )
 }
 
-@Composable
-fun BottomNavBar(navController: NavController) {
-    NavigationBar(
-        containerColor = Color(0xFFEFEFE9)
-    ) {
-        NavigationBarItem(
-            icon = {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.home),
-                    fontWeight = FontWeight.Bold)
-            },
-            selected = false,
-            onClick = { navController.navigate("home") }
-        )
-
-        NavigationBarItem(
-            icon = {
-                Icon(Icons.Filled.Search, contentDescription = "Search")
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.search),
-                    fontWeight = FontWeight.Bold)
-            },
-            selected = false,
-            onClick = { navController.navigate("search") }
-        )
-
-        NavigationBarItem(
-            icon = {
-                Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.notifications),
-                    fontWeight = FontWeight.Bold)
-            },
-            selected = false,
-            onClick = { navController.navigate("notifications") }
-        )
-
-        NavigationBarItem(
-            icon = {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(Color.LightGray, CircleShape), // Background circle
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.image1),
-                        contentDescription = "Profile",
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape) // Ensures the image is circular
-                    )
-                }
-            },
-            label = {
-                Text(
-                    text = stringResource(R.string.profile),
-                    fontWeight = FontWeight.Bold)
-                },
-            selected = false,
-            onClick = { navController.navigate("profilescreen") }
-        )
-    }
-}
 
 @Composable
 fun Heading(title: String) {
@@ -187,8 +128,9 @@ fun MoreButton(onClick: () -> Unit) {
 fun PictureCard(picture: Picture, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         modifier = modifier
-            .width(200.dp)
+            .width(250.dp)
             .height(250.dp)
+            .padding(start = 8.dp)
             .padding(8.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
