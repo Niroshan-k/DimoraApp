@@ -57,7 +57,7 @@ fun BottomNavBar(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             },
             selected = false,
-            onClick = { navController.navigate("search") }
+            onClick = { navController.navigate("searchscreen") }
         )
 
         NavigationBarItem(

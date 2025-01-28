@@ -31,7 +31,7 @@ fun SignUpScreen(navController: NavController) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
-    val nic = remember { mutableStateOf("") }
+    val contact = remember { mutableStateOf("") }
     val selectedRole = remember { mutableStateOf("Customer") }
 
     // Big Sign Up Text
@@ -91,11 +91,11 @@ fun SignUpScreen(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // NIC Input
+        // contact Input
         TextField(
-            value = nic.value,
-            onValueChange = { nic.value = it },
-            label = { Text("NIC") },
+            value = contact.value,
+            onValueChange = { contact.value = it },
+            label = { Text("Contact") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)

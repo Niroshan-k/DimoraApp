@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -28,12 +29,19 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -50,6 +58,7 @@ import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,9 +69,8 @@ import com.example.dimoraapp.R
 import com.example.dimoraapp.data.Datasource
 import com.example.dimoraapp.model.PictureInfo
 import com.example.dimoraapp.navigation.BottomNavBar
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
+import com.example.dimoraapp.ui.theme.DMserif
+
 
 @Composable
 fun InfoScreen(navController: NavController){
@@ -84,7 +92,6 @@ fun InfoScreen(navController: NavController){
                     goToHomePage = { navController.navigate("homescreen")},
                     onMenuClick = { isDrawerOpen = true })
                 }
-                item { BannerImage() }
                 item { PicturesList() }
                 item { HouseDetails() }
 
@@ -108,7 +115,7 @@ fun InfoScreen(navController: NavController){
 @Composable
 fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
     TopAppBar(
-        title = {Text(text = "About Us", color = Color(0xFF28302B), fontSize = 18.sp)},
+        title = {Text(text = "Home", color = Color(0xFF28302B), fontSize = 18.sp)},
         navigationIcon = {
             IconButton(onClick = goToHomePage) {
                 Icon(
@@ -134,9 +141,9 @@ fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
 }
 
 @Composable
-fun BannerImage(){
+fun BannerImage(selectedImageResId: Int) {
     Image(
-        painter = painterResource(R.drawable.imageinfo1),
+        painter = painterResource(selectedImageResId),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
@@ -144,14 +151,18 @@ fun BannerImage(){
             .height(300.dp)
     )
 }
-
 @Composable
-fun PictureCardInfo(picture: PictureInfo, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun PictureCardInfo(
+    picture: PictureInfo,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Card(
         modifier = modifier
             .width(90.dp)
             .height(90.dp)
-            .padding(start = 8.dp),
+            .padding(start = 8.dp)
+            .clickable { onClick() }, // Trigger the onClick action
         shape = RoundedCornerShape(4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -168,13 +179,32 @@ fun PictureCardInfo(picture: PictureInfo, modifier: Modifier = Modifier, onClick
 
 @Composable
 fun PicturesList() {
-    PictureListInfo(
-        pictureList = Datasource().loadPicturesInfo(),
-    )
+    // Use a state to track the selected image resource ID
+    val pictureList = Datasource().loadPicturesInfo()
+    val (selectedImageResId, setSelectedImageResId) = remember {
+        mutableStateOf(pictureList.first().drawableResourseId) // Default to the first picture
+    }
+
+    Column {
+        // Banner Image displaying the selected image
+        BannerImage(selectedImageResId)
+
+        // Picture List
+        PictureListInfo(
+            pictureList = pictureList,
+            onPictureClick = { selectedPicture ->
+                setSelectedImageResId(selectedPicture.drawableResourseId)
+            }
+        )
+    }
 }
 
 @Composable
-fun PictureListInfo(pictureList: Array<PictureInfo>, modifier: Modifier = Modifier) {
+fun PictureListInfo(
+    pictureList: Array<PictureInfo>,
+    modifier: Modifier = Modifier,
+    onPictureClick: (PictureInfo) -> Unit
+) {
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
@@ -185,13 +215,14 @@ fun PictureListInfo(pictureList: Array<PictureInfo>, modifier: Modifier = Modifi
             PictureCardInfo(
                 picture = pictureList[index],
                 onClick = {
-
+                    onPictureClick(pictureList[index]) // Pass the clicked picture to the callback
                 }
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HouseDetails() {
     Column {
@@ -392,50 +423,128 @@ fun HouseDetails() {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        PropertyMap(lat = 51.505, lng = -0.09)
+
         Text(
-            text = "Description",
+            text = stringResource(R.string.description),
             modifier = Modifier
                 .padding(top = 30.dp, start = 16.dp),
             color = Color.Gray,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-    }
-}
-
-@Composable
-fun PropertyMap(lat: Double, lng: Double) {
-    val context = LocalContext.current
-
-    // AndroidView for integrating native views in Jetpack Compose
-    Box(
-        modifier = Modifier
-            .height(300.dp)
-            .fillMaxWidth()
-    ){
-        AndroidView(
-            modifier = Modifier.padding(16.dp),
-            factory = {
-                MapView(context).apply {
-                    // Set up the map
-                    setMultiTouchControls(true)
-                    controller.setZoom(15.0)
-                    controller.setCenter(GeoPoint(lat, lng))
-
-                    // Add a marker to the map
-                    val marker = Marker(this).apply {
-                        position = GeoPoint(lat, lng)
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        title = "Property Location"
-                    }
-                    overlays.add(marker)
-                }
-            },
-            update = { mapView ->
-                // Update map center dynamically if needed
-                mapView.controller.setCenter(GeoPoint(lat, lng))
-            }
+        Text(
+            text = stringResource(R.string.description_long),
+            modifier = Modifier
+                .padding(top = 24.dp, start = 32.dp, end = 32.dp),
+            color = Color.Gray,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal
         )
+        Text(
+            text = "Connect With the Seller",
+            modifier = Modifier
+                .padding(top = 32.dp, start = 32.dp, end = 32.dp),
+            color = Color.Black,
+            fontSize = 35.sp,
+            fontFamily = DMserif
+
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 24.dp, start = 32.dp, end = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            val email = remember { mutableStateOf("") }
+            val name = remember { mutableStateOf("") }
+            val contact = remember { mutableStateOf("") }
+            val message = remember { mutableStateOf("") }
+            Spacer(modifier = Modifier.height(16.dp))
+            // name Input
+            TextField(
+                value = name.value,
+                onValueChange = { name.value = it },
+                label = { Text(text = "Full Name", color = Color.Gray)},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+                shape = MaterialTheme.shapes.medium, // Rounded corners
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xFFEFEFE9)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Email Input
+            TextField(
+                value = email.value,
+                onValueChange = { email.value = it },
+                label = { Text(text = "Email", color = Color.Gray) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+                shape = MaterialTheme.shapes.medium, // Rounded corners
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xFFEFEFE9)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // contact Input
+            TextField(
+                value = contact.value,
+                onValueChange = { contact.value = it },
+                label = { Text(text = "Contact", color = Color.Gray) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+                shape = MaterialTheme.shapes.medium, // Rounded corners
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xFFEFEFE9)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // message Input
+            TextField(
+                value = message.value,
+                onValueChange = { contact.value = it },
+                label = { Text(text = "Message", color = Color.Gray) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+                shape = MaterialTheme.shapes.medium, // Rounded corners
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color(0xFFEFEFE9)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF523D35),
+                    contentColor = Color.White
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(text = "Send Message", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
 }
+
