@@ -244,11 +244,7 @@ fun Recommandations (onClick: () -> Unit) {
     Heading("Recommendations")
     Spacer(modifier = Modifier.height(16.dp))
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(16.dp)
-            .clickable { onClick() },
+        modifier = Modifier .fillMaxWidth() .height(200.dp) .padding(16.dp) .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ){

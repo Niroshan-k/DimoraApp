@@ -70,7 +70,7 @@ fun BottomNavBar(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             },
             selected = false,
-            onClick = { navController.navigate("notifications") }
+            onClick = { navController.navigate("notificationscreen") }
         )
 
         NavigationBarItem(

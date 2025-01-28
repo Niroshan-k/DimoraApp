@@ -84,10 +84,7 @@ fun TopNavBar(onMenuClick: () -> Unit) {
                     tint = Color(0xFF28302B),
                 )
             }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFEFEFE9)
-        )
+        }
     )
 }
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
@@ -51,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -121,22 +123,21 @@ fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "Homepage",
-                    tint = Color(0xFF28302B)
+                    tint = Color.Black
                 )
             }
         },
         actions = {
-            IconButton(onClick = onMenuClick) {
+            IconButton(
+                onClick = onMenuClick,
+            ) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More Options",
-                    tint = Color(0xFF28302B),
+                    tint = Color.Black
                 )
             }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFEFEFE9)
-        )
+        }
     )
 }
 
@@ -148,7 +149,9 @@ fun BannerImage(selectedImageResId: Int) {
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .fillMaxSize()
+            .padding(8.dp)
             .height(300.dp)
+            .clip(shape = RoundedCornerShape(8.dp))
     )
 }
 @Composable
@@ -263,7 +266,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -287,7 +290,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -311,7 +314,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -347,7 +350,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -371,7 +374,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -395,7 +398,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color.White, shape = RoundedCornerShape(4.dp)),
+                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
