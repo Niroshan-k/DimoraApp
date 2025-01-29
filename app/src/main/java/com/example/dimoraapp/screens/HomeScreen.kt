@@ -1,5 +1,8 @@
 package com.example.dimoraapp.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -29,46 +33,51 @@ import com.example.dimoraapp.model.Picture
 import com.example.dimoraapp.data.Datasource
 import com.example.dimoraapp.navigation.BottomNavBar
 
-
 @Composable
 fun HomeScreen(navController: NavController) {
     var isDrawerOpen by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Content layout
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // LazyColumn for scrollable content
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f) // Take up remaining vertical space
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Add spacing between items
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.Transparent
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                item { TopNavBar(onMenuClick = { isDrawerOpen = true }) }
-                item { Heading("House") }
-                item { PicturesApp(navController) }
-                item { MoreButton(onClick = { /* Navigate to a new page */ }) }
-                item { Heading("Land") }
-                item { PicturesApp(navController) }
-                item { MoreButton(onClick = { /* Navigate to a new page */ }) }
+                TransparentTopBar(onMenuClick = { isDrawerOpen = true })
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item { Heading("House") }
+                    item { PicturesApp(navController) }
+                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
+                    item { Heading("Villa") }
+                    item { PicturesApp(navController) }
+                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
+                    item { Heading("Guest House") }
+                    item { PicturesApp(navController) }
+                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
+                }
+                BottomNavBar(navController = navController)
             }
 
-            // Bottom navigation bar
-            BottomNavBar(navController = navController)
-        }
-
-        // Side drawer for navigation
-        if (isDrawerOpen) {
-            SideNavBar(
-                onClose = { isDrawerOpen = false },
-                onAboutUsClick = { navController.navigate("about_us") }
-            )
+            AnimatedVisibility(
+                visible = isDrawerOpen,
+                enter = slideInHorizontally(initialOffsetX = { -300 }),
+                exit = slideOutHorizontally(targetOffsetX = { -300 })
+            ) {
+                SideNavBar(
+                    onClose = { isDrawerOpen = false },
+                    onAboutUsClick = { navController.navigate("about_us") }
+                )
+            }
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,17 +86,29 @@ fun TopNavBar(onMenuClick: () -> Unit) {
     TopAppBar(
         title = {},
         actions = {
-            IconButton(onClick = onMenuClick) {
+            IconButton(
+                onClick = onMenuClick,
+                modifier = Modifier.background(Color.Transparent)
+            ) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More Options",
                     tint = Color(0xFF28302B),
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent, // Ensures full transparency
+            scrolledContainerColor = Color.Transparent // Ensures it remains transparent on scroll
+        )
     )
 }
-
+@Composable
+fun TransparentTopBar(onMenuClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxWidth().background(Color.Transparent)) {
+        TopNavBar(onMenuClick)
+    }
+}
 
 @Composable
 fun Heading(title: String) {
@@ -214,17 +235,16 @@ fun PictureList(pictureList: List<Picture>, navController: NavController, modifi
         }
     }
 }
-
 @Composable
 fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxHeight()
-            .width(250.dp)
-            .background(Color(0xFFEFEFE9)),
-        contentAlignment = Alignment.TopEnd
+            .width(250.dp) // Adjust width as needed
+            .background(Color.White),
+        contentAlignment = Alignment.TopStart, // Adjust content alignment inside the navbar
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp).padding(top = 32.dp)) {
             IconButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) {
                 Icon(
                     imageVector = Icons.Filled.Close,

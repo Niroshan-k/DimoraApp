@@ -17,13 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dimoraapp.ui.theme.DMserif
+import com.example.dimoraapp.ui.theme.DimoraAppTheme
 
 @Composable
 fun GetStartedScreen(navController: NavController) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -36,14 +37,14 @@ fun GetStartedScreen(navController: NavController) {
                 Text(
                     text = "MAKE YOUR OWN",
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Real Estate Network",
                     fontSize = 60.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.secondary,
                     fontFamily = DMserif,
                     style = TextStyle(
                         lineHeight = 72.sp // This will give extra space between lines to prevent overlap
@@ -53,7 +54,7 @@ fun GetStartedScreen(navController: NavController) {
 
             FloatingActionButton(
                 onClick = { navController.navigate("signup") },
-                containerColor = Color(0xFF28302B),
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

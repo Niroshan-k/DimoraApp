@@ -9,6 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -62,7 +64,15 @@ fun BottomNavBar(navController: NavController) {
 
         NavigationBarItem(
             icon = {
-                Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
+                BadgedBox(
+                    badge = {
+                        Badge{
+                            Text(text = "4")
+                        }
+                    }
+                ) {
+                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
+                }
             },
             label = {
                 Text(

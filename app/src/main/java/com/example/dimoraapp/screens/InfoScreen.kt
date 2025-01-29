@@ -1,5 +1,8 @@
 package com.example.dimoraapp.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -84,16 +88,16 @@ fun InfoScreen(navController: NavController){
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            TopNavBarInfo(
+                goToHomePage = { navController.navigate("homescreen")},
+                onMenuClick = { isDrawerOpen = true })
             // LazyColumn for scrollable content
             LazyColumn(
                 modifier = Modifier
                     .weight(1f) // Take up remaining vertical space
                     .fillMaxWidth(),
             ) {
-                item { TopNavBarInfo(
-                    goToHomePage = { navController.navigate("homescreen")},
-                    onMenuClick = { isDrawerOpen = true })
-                }
+
                 item { PicturesList() }
                 item { HouseDetails() }
 
@@ -104,7 +108,11 @@ fun InfoScreen(navController: NavController){
         }
 
         // Side drawer for navigation
-        if (isDrawerOpen) {
+        AnimatedVisibility(
+            visible = isDrawerOpen,
+            enter = slideInHorizontally(initialOffsetX = { -300 }),
+            exit = slideOutHorizontally(targetOffsetX = { -300 })
+        ) {
             SideNavBar(
                 onClose = { isDrawerOpen = false },
                 onAboutUsClick = { navController.navigate("about_us") }
@@ -137,7 +145,14 @@ fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
                     tint = Color.Black
                 )
             }
-        }
+        },
+        colors = TopAppBarColors(
+            containerColor = Color.Transparent,
+            actionIconContentColor = Color.Black,
+            navigationIconContentColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent,
+            titleContentColor = Color.Black
+        )
     )
 }
 

@@ -10,9 +10,11 @@ import com.example.dimoraapp.screens.SignInScreen
 import com.example.dimoraapp.screens.SignUpScreen
 import com.example.dimoraapp.screens.HomeScreen
 import com.example.dimoraapp.screens.InfoScreen
+import com.example.dimoraapp.screens.MoreHouseScreen
 import com.example.dimoraapp.screens.NotificationScreen
 import com.example.dimoraapp.screens.ProfileScreen
 import com.example.dimoraapp.screens.SearchScreen
+import com.example.dimoraapp.ui.theme.DimoraAppTheme
 
 @Composable
 fun AppNavigation() {
@@ -20,9 +22,11 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "infoscreen"
+        startDestination = "getStarted"
     ) {
-        composable("getStarted") { GetStartedScreen(navController) }
+        composable("getStarted") { DimoraAppTheme {
+            GetStartedScreen(navController)
+        } }
         composable("signup") { SignUpScreen(navController) }
         composable("signin") { SignInScreen(navController) }
         composable("homescreen") { HomeScreen(navController) }
@@ -30,5 +34,6 @@ fun AppNavigation() {
         composable("profilescreen"){ ProfileScreen(navController) }
         composable("searchscreen"){ SearchScreen(navController) }
         composable("notificationscreen"){ NotificationScreen(navController)}
+        composable("morehousescreen"){ MoreHouseScreen(navController)}
     }
 }
