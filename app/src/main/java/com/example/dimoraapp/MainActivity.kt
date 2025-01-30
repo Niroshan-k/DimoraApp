@@ -9,13 +9,14 @@ import com.example.dimoraapp.navigation.AppNavigation
 import com.example.dimoraapp.ui.theme.DimoraAppTheme
 
 import com.example.dimoraapp.screens.InfoScreen
+import com.example.dimoraapp.ui.theme.CustomTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            DimoraAppTheme {
+            CustomTheme {
                 AppNavigation()
             }
         }

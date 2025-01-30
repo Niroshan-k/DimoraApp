@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -34,11 +35,11 @@ fun BottomNavBar(navController: NavController) {
     NavigationBar(
         modifier = Modifier
             .shadow(3.dp, shape = RectangleShape),
-        containerColor = Color(0xFFFFFFFF)
+        containerColor = MaterialTheme.colorScheme.background
     ) {
         NavigationBarItem(
             icon = {
-                Icon(Icons.Filled.Home, contentDescription = "Home")
+                Icon(Icons.Filled.Home, contentDescription = "Home", tint = MaterialTheme.colorScheme.surface)
             },
             label = {
                 Text(
@@ -47,11 +48,12 @@ fun BottomNavBar(navController: NavController) {
             },
             selected = false,
             onClick = { navController.navigate("homescreen") }
+
         )
 
         NavigationBarItem(
             icon = {
-                Icon(Icons.Filled.Search, contentDescription = "Search")
+                Icon(Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.surface)
             },
             label = {
                 Text(
@@ -71,7 +73,7 @@ fun BottomNavBar(navController: NavController) {
                         }
                     }
                 ) {
-                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
+                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications", tint = MaterialTheme.colorScheme.surface)
                 }
             },
             label = {

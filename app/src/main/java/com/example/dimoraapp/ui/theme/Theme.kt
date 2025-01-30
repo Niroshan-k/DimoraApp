@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -17,15 +18,17 @@ import com.example.dimoraapp.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = darkbrown,
-    secondary = green,
+    secondary = darkgreen,
     tertiary = yellow,
     background = darkbackground,
+    surface = darklight
 )
 private val LightColorScheme = lightColorScheme(
     primary = lightbrown,
-    secondary = green,
+    secondary = lightgreen,
     tertiary = yellow,
     background = lightbackground,
+    surface = lightdark
 )
 
 val DMserif = FontFamily(
@@ -50,7 +53,22 @@ fun DimoraAppTheme(
     }
 
     MaterialTheme(
-        colorScheme = lightColorScheme(),
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+
+}
+
+@Composable
+fun CustomTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+
+    MaterialTheme(
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

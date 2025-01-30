@@ -1,5 +1,6 @@
 package com.example.dimoraapp.screens
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -61,6 +63,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -82,7 +85,7 @@ import com.example.dimoraapp.ui.theme.DMserif
 fun InfoScreen(navController: NavController){
     var isDrawerOpen by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
 
         // Content layout
         Column(
@@ -125,13 +128,13 @@ fun InfoScreen(navController: NavController){
 @Composable
 fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
     TopAppBar(
-        title = {Text(text = "Home", color = Color(0xFF28302B), fontSize = 18.sp)},
+        title = {Text(text = "Home", color = MaterialTheme.colorScheme.surface, fontSize = 18.sp)},
         navigationIcon = {
             IconButton(onClick = goToHomePage) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "Homepage",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.surface
                 )
             }
         },
@@ -142,12 +145,12 @@ fun TopNavBarInfo(goToHomePage: () -> Unit, onMenuClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More Options",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.surface
                 )
             }
         },
         colors = TopAppBarColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.background,
             actionIconContentColor = Color.Black,
             navigationIconContentColor = Color.Transparent,
             scrolledContainerColor = Color.Transparent,
@@ -223,10 +226,15 @@ fun PictureListInfo(
     modifier: Modifier = Modifier,
     onPictureClick: (PictureInfo) -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
+
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .padding(start = padding),
         horizontalArrangement = Arrangement.spacedBy(1.dp)
     ) {
         items(pictureList.size) { index ->
@@ -243,23 +251,30 @@ fun PictureListInfo(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HouseDetails() {
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val padding = if (isLandscape) 64.dp else 16.dp
+
     Column {
         Heading(stringResource(R.string.price1))
         Box(){
             Row(
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = padding)
             ) {
-                Icon(Icons.Filled.LocationOn, contentDescription = "location")
+                Icon(Icons.Filled.LocationOn, contentDescription = "location", tint = MaterialTheme.colorScheme.surface)
                 Text(
                     text = stringResource(R.string.Heading1),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.surface
                 )
             }
         }
         Text(
             text = stringResource(R.string.property_details),
             modifier = Modifier
-                .padding(top = 30.dp, start = 16.dp),
+                .padding(top = 30.dp, start = padding),
             color = Color.Gray,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -281,7 +296,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -305,7 +320,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -329,7 +344,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -365,7 +380,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -389,7 +404,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -413,7 +428,7 @@ fun HouseDetails() {
                         .height(100.dp)
                         .width(100.dp)
                         .shadow(2.dp, shape = RoundedCornerShape(4.dp))
-                        .background(color = Color(0xFFEFEFE9), shape = RoundedCornerShape(4.dp)),
+                        .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp)),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
@@ -436,7 +451,7 @@ fun HouseDetails() {
         Text(
             text = stringResource(R.string.location),
             modifier = Modifier
-                .padding(top = 30.dp, start = 16.dp),
+                .padding(top = 30.dp, start = padding),
             color = Color.Gray,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -445,7 +460,7 @@ fun HouseDetails() {
         Text(
             text = stringResource(R.string.description),
             modifier = Modifier
-                .padding(top = 30.dp, start = 16.dp),
+                .padding(top = 30.dp, start = padding),
             color = Color.Gray,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -453,116 +468,91 @@ fun HouseDetails() {
         Text(
             text = stringResource(R.string.description_long),
             modifier = Modifier
-                .padding(top = 24.dp, start = 32.dp, end = 32.dp),
-            color = Color.Gray,
+                .padding(top = 24.dp, start = padding, end = padding),
+            color = MaterialTheme.colorScheme.tertiary,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal
         )
         Text(
             text = "Connect With the Seller",
             modifier = Modifier
-                .padding(top = 32.dp, start = 32.dp, end = 32.dp),
-            color = Color.Black,
+                .padding(top = 32.dp, start = padding, end = padding),
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 35.sp,
             fontFamily = DMserif
 
         )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 24.dp, start = 32.dp, end = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            val email = remember { mutableStateOf("") }
-            val name = remember { mutableStateOf("") }
-            val contact = remember { mutableStateOf("") }
-            val message = remember { mutableStateOf("") }
-            Spacer(modifier = Modifier.height(16.dp))
-            // name Input
+        Form()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Form() {
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val email = remember { mutableStateOf("") }
+    val username = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val confirmPassword = remember { mutableStateOf("") }
+    val contact = remember { mutableStateOf("") }
+
+    val padding = if (isLandscape) 64.dp else 24.dp
+
+    Column(
+        modifier = Modifier
+            .padding(top = 24.dp, start = padding, end = padding)
+    ) {
+        // Define a list of pairs (label, state)
+        val formFields = listOf(
+            "Email" to email,
+            "Username" to username,
+            "Contact" to contact,
+            "Password" to password,
+            "Confirm Password" to confirmPassword
+        )
+
+        // Loop through the list and create a TextField for each pair
+        formFields.forEach { (label, state) ->
             TextField(
-                value = name.value,
-                onValueChange = { name.value = it },
-                label = { Text(text = "Full Name", color = Color.Gray)},
+                value = state.value,
+                onValueChange = { state.value = it },
+                label = { Text(label) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
+                    .padding(start = padding, end = padding, bottom = 8.dp)
                     .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                shape = MaterialTheme.shapes.medium, // Rounded corners
+                shape = MaterialTheme.shapes.medium,
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xFFEFEFE9)
+                    containerColor = MaterialTheme.colorScheme.tertiary
                 )
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Email Input
-            TextField(
-                value = email.value,
-                onValueChange = { email.value = it },
-                label = { Text(text = "Email", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                shape = MaterialTheme.shapes.medium, // Rounded corners
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xFFEFEFE9)
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            // contact Input
-            TextField(
-                value = contact.value,
-                onValueChange = { contact.value = it },
-                label = { Text(text = "Contact", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                shape = MaterialTheme.shapes.medium, // Rounded corners
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xFFEFEFE9)
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            // message Input
-            TextField(
-                value = message.value,
-                onValueChange = { contact.value = it },
-                label = { Text(text = "Message", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                shape = MaterialTheme.shapes.medium, // Rounded corners
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    containerColor = Color(0xFFEFEFE9)
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF523D35),
-                    contentColor = Color.White
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(text = "Send Message", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.height(32.dp))
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(start = padding, end = padding)
+                .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            ),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(text = "Send Message", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 

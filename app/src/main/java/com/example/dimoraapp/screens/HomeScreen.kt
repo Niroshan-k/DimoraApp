@@ -1,5 +1,6 @@
 package com.example.dimoraapp.screens
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,13 +41,13 @@ fun HomeScreen(navController: NavController) {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent
+        color = MaterialTheme.colorScheme.background
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                TransparentTopBar(onMenuClick = { isDrawerOpen = true })
+                TopNavBar(onMenuClick = { isDrawerOpen = true })
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -80,6 +82,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopNavBar(onMenuClick: () -> Unit) {
@@ -93,7 +96,7 @@ fun TopNavBar(onMenuClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More Options",
-                    tint = Color(0xFF28302B),
+                    tint = MaterialTheme.colorScheme.surface,
                 )
             }
         },
@@ -103,21 +106,19 @@ fun TopNavBar(onMenuClick: () -> Unit) {
         )
     )
 }
-@Composable
-fun TransparentTopBar(onMenuClick: () -> Unit) {
-    Box(modifier = Modifier.fillMaxWidth().background(Color.Transparent)) {
-        TopNavBar(onMenuClick)
-    }
-}
+
 
 @Composable
 fun Heading(title: String) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
     Text(
         text = title,
         fontFamily = DMserif,
-        fontSize = 35.sp,
-        color = Color.Black,
-        modifier = Modifier.padding(start = 16.dp)
+        fontSize = 40.sp,
+        color = MaterialTheme.colorScheme.secondary,
+        modifier = Modifier.padding(start = padding)
     )
 }
 
@@ -132,7 +133,7 @@ fun MoreButton(onClick: () -> Unit) {
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF28302B),
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(8.dp)
@@ -195,8 +196,11 @@ fun PicturesApp(navController: NavController) {
 
 @Composable
 fun PictureList(pictureList: List<Picture>, navController: NavController, modifier: Modifier = Modifier) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 0.dp
     LazyRow(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().padding(start = padding),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(pictureList.size) { index ->
@@ -237,19 +241,22 @@ fun PictureList(pictureList: List<Picture>, navController: NavController, modifi
 }
 @Composable
 fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
     Box(
         modifier = Modifier
             .fillMaxHeight()
             .width(250.dp) // Adjust width as needed
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.TopStart, // Adjust content alignment inside the navbar
     ) {
-        Column(modifier = Modifier.padding(16.dp).padding(top = 32.dp)) {
+        Column(modifier = Modifier.padding(start = padding).padding(top = 32.dp)) {
             IconButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = "Close",
-                    tint = Color(0xFF28302B)
+                    tint = MaterialTheme.colorScheme.surface
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -263,10 +270,10 @@ fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Info,
                     contentDescription = "About Us",
-                    tint = Color(0xFF28302B)
+                    tint = MaterialTheme.colorScheme.surface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "About Us", color = Color(0xFF28302B), fontSize = 18.sp)
+                Text(text = "About Us", color = MaterialTheme.colorScheme.surface, fontSize = 18.sp)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -278,10 +285,10 @@ fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Build,
                     contentDescription = "Dark Mode",
-                    tint = Color(0xFF28302B)
+                    tint = MaterialTheme.colorScheme.surface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Dark Mode", color = Color(0xFF28302B), fontSize = 18.sp)
+                Text(text = "Dark Mode", color = MaterialTheme.colorScheme.surface, fontSize = 18.sp)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -293,10 +300,10 @@ fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
                     contentDescription = "Settings",
-                    tint = Color(0xFF28302B)
+                    tint = MaterialTheme.colorScheme.surface
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Settings", color = Color(0xFF28302B), fontSize = 18.sp)
+                Text(text = "Settings", color = MaterialTheme.colorScheme.surface, fontSize = 18.sp)
             }
         }
     }

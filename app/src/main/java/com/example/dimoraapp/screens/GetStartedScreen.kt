@@ -70,3 +70,5 @@ fun GetStartedScreen(navController: NavController) {
         }
     }
 }
+
+
