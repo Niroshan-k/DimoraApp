@@ -19,14 +19,14 @@ import com.example.dimoraapp.R
 private val DarkColorScheme = darkColorScheme(
     primary = darkbrown,
     secondary = darkgreen,
-    tertiary = yellow,
+    tertiary = darkyellow,
     background = darkbackground,
     surface = darklight
 )
 private val LightColorScheme = lightColorScheme(
     primary = lightbrown,
     secondary = lightgreen,
-    tertiary = yellow,
+    tertiary = lightyellow,
     background = lightbackground,
     surface = lightdark
 )

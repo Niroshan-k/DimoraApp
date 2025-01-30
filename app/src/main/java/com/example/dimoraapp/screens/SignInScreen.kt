@@ -99,7 +99,7 @@ fun SignInScreen(navController: NavController) {
             onClick = { navController.navigate("homescreen") },
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = Color.White,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).size(60.dp),
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).size(80.dp),
             shape = CircleShape
         ) {
             Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Navigate to home")

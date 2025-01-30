@@ -68,8 +68,10 @@ fun BottomNavBar(navController: NavController) {
             icon = {
                 BadgedBox(
                     badge = {
-                        Badge{
-                            Text(text = "4")
+                        Badge(
+                            containerColor = Color.Red
+                        ){
+                            Text(text = "4", color = Color.White)
                         }
                     }
                 ) {

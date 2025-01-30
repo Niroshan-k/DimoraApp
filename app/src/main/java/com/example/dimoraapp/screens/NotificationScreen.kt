@@ -1,5 +1,6 @@
 package com.example.dimoraapp.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -40,20 +42,22 @@ import com.example.dimoraapp.navigation.BottomNavBar
 
 @Composable
 fun NotificationScreen(navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)
+    ) {
 
         // Content layout
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
             // LazyColumn for scrollable content
+            Spacer(modifier = Modifier.height(64.dp))
             LazyColumn(
                 modifier = Modifier
                     .weight(1f) // Take up remaining vertical space
                     .fillMaxWidth(),
             ) {
-
-                item { Heading("Notifications") }
                 item { Notification (onClick = {navController.navigate("infoscreen")}) }
                 item { Notification (onClick = {navController.navigate("infoscreen")})}
                 item { Notification (onClick = {navController.navigate("infoscreen")})}
@@ -70,16 +74,20 @@ fun NotificationScreen(navController: NavController) {
 
 @Composable
 fun Notification(onClick: () -> Unit) {
-    Spacer(modifier = Modifier.width(32.dp))
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
+
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .padding(start = 16.dp,8.dp, end = 16.dp, bottom = 8.dp)
+            .padding(start = padding,8.dp, end = padding, bottom = 8.dp)
             .fillMaxWidth()
             .clickable{onClick()}
-            .shadow(3.dp, shape = RoundedCornerShape(8.dp)),
+            .shadow(8.dp, shape = RoundedCornerShape(8.dp)),
         colors = CardColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.background,
             contentColor = Color.Black,
             disabledContentColor = Color.Transparent,
             disabledContainerColor = Color.Transparent
@@ -97,7 +105,8 @@ fun Notification(onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "New Propert Listed ✌️. Check it out!"
+                text = "New Propert Listed ✌️. Check it out!",
+                color = MaterialTheme.colorScheme.surface
             )
             Box(
                 Modifier.fillMaxWidth(),
@@ -108,12 +117,12 @@ fun Notification(onClick: () -> Unit) {
                     modifier = Modifier.padding(8.dp)
                 ) {
                     Text(
-                        text = "1d", color = Color.Gray
+                        text = "1d", color = MaterialTheme.colorScheme.surface
                     )
                     Icon(
                         Icons.Filled.Delete,
                         contentDescription = "delete",
-                        tint = Color.Gray,
+                        tint = MaterialTheme.colorScheme.surface,
                         modifier = Modifier.size(20.dp))
                 }
             }

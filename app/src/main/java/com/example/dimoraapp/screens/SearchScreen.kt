@@ -1,5 +1,6 @@
 package com.example.dimoraapp.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +56,7 @@ import com.example.dimoraapp.ui.theme.DMserif
 
 @Composable
 fun SearchScreen (navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)) {
 
         // Content layout
         Column(
@@ -66,7 +68,9 @@ fun SearchScreen (navController: NavController) {
                     .weight(1f) // Take up remaining vertical space
                     .fillMaxWidth(),
             ) {
-                item { SearchBar(valueChange = { query ->
+                item {
+                    Spacer(modifier = Modifier.padding(top = 40.dp))
+                    SearchBar(valueChange = { query ->
                     // Handle search action
                     println("Searching for: $query")
                 })}
@@ -86,50 +90,62 @@ fun SearchScreen (navController: NavController) {
 @Composable
 
 fun SearchBar(valueChange: (String) -> Unit) {
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
     var query by remember { mutableStateOf("") } // Use `var` with `remember` for state
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = padding, end = padding, top = 24.dp),
     ) {
+
         Row {
-            //drop down
             var expanded by remember { mutableStateOf(false) } // State to control dropdown visibility
             var selectedOption by remember { mutableStateOf("") } // State to hold selected value
-            val options = listOf("Kandy", "Anuradhapura", "Matale") // Dropdown options
+            val options = listOf("House", "Guest Huose", "Villa")
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = !expanded } // Toggle the dropdown
             ) {
+                val width = if (isLandscape) 450.dp else 200.dp
                 TextField(
                     value = selectedOption,
                     onValueChange = {},
                     readOnly = true, // Prevent manual text input
-                    label = { Text("District") }, // Label for the text field
+                    label = { Text("House Type") }, // Label for the text field
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown, // Dropdown icon
-                            contentDescription = "Dropdown icon"
+                            contentDescription = "Dropdown icon",
+                            tint = MaterialTheme.colorScheme.surface
                         )
                     },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
-                        .menuAnchor(),
+                        .menuAnchor().width(width),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant, // Background color
+                        containerColor = MaterialTheme.colorScheme.tertiary, // Background color
                         focusedIndicatorColor = Color.Transparent, // Remove underline
-                        unfocusedIndicatorColor = Color.Transparent // Remove underline
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedTextColor = MaterialTheme.colorScheme.surface,
+                        focusedLabelColor = MaterialTheme.colorScheme.surface,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.surface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.surface
                     )
+
                 )
 
                 DropdownMenu(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     expanded = expanded,
                     onDismissRequest = { expanded = false } // Close the dropdown when clicked outside
                 ) {
                     options.forEach { option ->
                         DropdownMenuItem(
-                            text = { Text(option) },
+                            text = { Text(option, color = MaterialTheme.colorScheme.surface) },
                             onClick = {
                                 selectedOption = option // Update selected value
                                 expanded = false // Close the dropdown
@@ -148,32 +164,39 @@ fun SearchBar(valueChange: (String) -> Unit) {
                 expanded = expanded2,
                 onExpandedChange = { expanded2 = !expanded2 } // Toggle the dropdown
             ) {
+                val width = if (isLandscape) 450.dp else 250.dp
                 TextField(
                     value = selectedOption2,
                     onValueChange = {},
                     readOnly = true, // Prevent manual text input
-                    label = { Text("City") }, // Label for the text field
+                    label = { Text("District") }, // Label for the text field
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown, // Dropdown icon
-                            contentDescription = "Dropdown icon"
+                            contentDescription = "Dropdown icon",
+                            tint = MaterialTheme.colorScheme.surface
                         )
                     },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
-                        .menuAnchor(),
+                        .menuAnchor().width(width),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant, // Background color
+                        containerColor = MaterialTheme.colorScheme.tertiary, // Background color
                         focusedIndicatorColor = Color.Transparent, // Remove underline
-                        unfocusedIndicatorColor = Color.Transparent // Remove underline
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedTextColor = MaterialTheme.colorScheme.surface,
+                        focusedLabelColor = MaterialTheme.colorScheme.surface,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.surface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.surface
                     )
                 )
 
                 DropdownMenu(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     expanded = expanded2,
                     onDismissRequest = { expanded2 = false } // Close the dropdown when clicked outside
                 ) {
-                    options.forEach { option2 ->
+                    options2.forEach { option2 ->
                         DropdownMenuItem(
                             text = { Text(option2) },
                             onClick = {
@@ -186,8 +209,64 @@ fun SearchBar(valueChange: (String) -> Unit) {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Row {
+        //drop down 2
+        var expanded2 by remember { mutableStateOf(false) } // State to control dropdown visibility
+        var selectedOption2 by remember { mutableStateOf("") } // State to hold selected value
+        val options2 = listOf("Kandy", "Anuradhapura", "Matale") // Dropdown options
+
+        ExposedDropdownMenuBox(
+            expanded = expanded2,
+            onExpandedChange = { expanded2 = !expanded2 },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             TextField(
+                value = selectedOption2,
+                onValueChange = {},
+                readOnly = true, // Prevent manual text input
+                label = { Text("City") }, // Label for the text field
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown, // Dropdown icon
+                        contentDescription = "Dropdown icon",
+                        tint = MaterialTheme.colorScheme.surface
+                    )
+                },
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary, // Background color
+                    focusedIndicatorColor = Color.Transparent, // Remove underline
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = MaterialTheme.colorScheme.surface,
+                    focusedLabelColor = MaterialTheme.colorScheme.surface,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.surface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.surface
+                )
+            )
+
+            DropdownMenu(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                expanded = expanded2,
+                onDismissRequest = { expanded2 = false } // Close the dropdown when clicked outside
+            ) {
+                options2.forEach { option2 ->
+                    DropdownMenuItem(
+                        text = { Text(option2) },
+                        onClick = {
+                            selectedOption2 = option2 // Update selected value
+                            expanded2 = false // Close the dropdown
+                        }
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            val width = if (isLandscape) 650.dp else 250.dp
+            TextField(
+                modifier = Modifier.width(width),
                 value = query, // Correct type (String)
                 onValueChange = { newValue ->
                     query = newValue // Update query state
@@ -205,31 +284,35 @@ fun SearchBar(valueChange: (String) -> Unit) {
                 singleLine = true,
                 shape = RoundedCornerShape(8.dp), // Rounded corners
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant, // Background color
+                    containerColor = MaterialTheme.colorScheme.tertiary, // Background color
                     focusedIndicatorColor = Color.Transparent, // Remove underline
-                    unfocusedIndicatorColor = Color.Transparent // Remove underline
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = MaterialTheme.colorScheme.surface,
+                    focusedLabelColor = MaterialTheme.colorScheme.surface,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.surface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.surface
                 )
             )
             Spacer(modifier = Modifier.width(16.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp),
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ){
+                val width = if (isLandscape) 250.dp else 200.dp
                 Button(
                     modifier = Modifier
-                        .height(60.dp),
+                        .height(60.dp).width(width),
                     onClick = { },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF523D35),
+                        containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = Color.White
                     ),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "search"
+                    Text(
+                        text = "Search",
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -240,11 +323,17 @@ fun SearchBar(valueChange: (String) -> Unit) {
 
 @Composable
 fun Recommandations (onClick: () -> Unit) {
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val padding = if (isLandscape) 64.dp else 16.dp
+
     Spacer(modifier = Modifier.height(32.dp))
     Heading("Recommendations")
     Spacer(modifier = Modifier.height(16.dp))
     Card(
-        modifier = Modifier .fillMaxWidth() .height(200.dp) .padding(16.dp) .clickable { onClick() },
+        modifier = Modifier .fillMaxWidth() .height(200.dp)
+            .padding(start = padding, end = padding, top = 24.dp).clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ){

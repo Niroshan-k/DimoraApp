@@ -24,7 +24,7 @@ fun GetStartedScreen(navController: NavController) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Green)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -59,7 +59,7 @@ fun GetStartedScreen(navController: NavController) {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp)
-                    .size(60.dp),
+                    .size(80.dp),
                 shape = CircleShape
             ) {
                 Icon(

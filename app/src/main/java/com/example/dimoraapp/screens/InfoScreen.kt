@@ -44,6 +44,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -303,15 +304,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.Home, contentDescription = "bedroom")
+                            Icon(painter = painterResource(R.drawable.baseline_bed_24), contentDescription = "bedroom", tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "2",fontWeight = FontWeight.Medium)
+                            Text(text = "2",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "Bedroom",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
                 Box(
@@ -327,15 +328,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.Home, contentDescription = "bedroom")
+                            Icon(painter = painterResource(R.drawable.baseline_bathtub_24), contentDescription = "bedroom",tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "1",fontWeight = FontWeight.Medium)
+                            Text(text = "1",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "Bathroom",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
                 Box(
@@ -351,15 +352,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.Place, contentDescription = "bedroom")
+                            Icon(painter = painterResource(R.drawable.baseline_square_foot_24), contentDescription = "bedroom",tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "45",fontWeight = FontWeight.Medium)
+                            Text(text = "45",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "sqft",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
             }
@@ -387,15 +388,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.DateRange, contentDescription = "bedroom")
+                            Icon(Icons.Filled.DateRange, contentDescription = "bedroom",tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "2020",fontWeight = FontWeight.Medium)
+                            Text(text = "2020",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "Year",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
                 Box(
@@ -411,15 +412,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.ShoppingCart, contentDescription = "bedroom")
+                            Icon(painter = painterResource(R.drawable.baseline_directions_car_24), contentDescription = "bedroom",tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "1",fontWeight = FontWeight.Medium)
+                            Text(text = "1",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "Car Park",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
                 Box(
@@ -435,15 +436,15 @@ fun HouseDetails() {
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
                         ) {
-                            Icon(Icons.Filled.Face, contentDescription = "bedroom")
+                            Icon(painter = painterResource(R.drawable.baseline_pool_24), contentDescription = "bedroom",tint = MaterialTheme.colorScheme.surface)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = "1",fontWeight = FontWeight.Medium)
+                            Text(text = "1",fontWeight = FontWeight.Medium,color = MaterialTheme.colorScheme.surface)
                         }
                         Text(
                             text = "Pool",
                             fontWeight = FontWeight.Black,
                             fontSize = 15.sp,
-                            color = Color.Gray)
+                            color = MaterialTheme.colorScheme.surface)
                     }
                 }
             }
@@ -469,7 +470,7 @@ fun HouseDetails() {
             text = stringResource(R.string.description_long),
             modifier = Modifier
                 .padding(top = 24.dp, start = padding, end = padding),
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.surface,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal
         )
@@ -493,10 +494,7 @@ fun Form() {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val email = remember { mutableStateOf("") }
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val confirmPassword = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("example@gmail.com") }
     val contact = remember { mutableStateOf("") }
 
     val padding = if (isLandscape) 64.dp else 24.dp
@@ -508,10 +506,7 @@ fun Form() {
         // Define a list of pairs (label, state)
         val formFields = listOf(
             "Email" to email,
-            "Username" to username,
             "Contact" to contact,
-            "Password" to password,
-            "Confirm Password" to confirmPassword
         )
 
         // Loop through the list and create a TextField for each pair
@@ -522,8 +517,8 @@ fun Form() {
                 label = { Text(label) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(start = padding, end = padding, bottom = 8.dp)
+                    .height(70.dp)
+                    .padding(start = padding, end = padding, bottom = 16.dp)
                     .shadow(4.dp, shape = MaterialTheme.shapes.medium),
                 shape = MaterialTheme.shapes.medium,
                 colors = TextFieldDefaults.textFieldColors(
@@ -533,7 +528,24 @@ fun Form() {
                 )
             )
         }
+        var message by remember { mutableStateOf("") }
 
+        TextField(
+            value = message,
+            onValueChange = {message = it},
+            label = { Text("Message") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(start = padding, end = padding, bottom = 16.dp)
+                .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+            shape = MaterialTheme.shapes.medium,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme.tertiary
+            )
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -555,4 +567,5 @@ fun Form() {
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
+
 
