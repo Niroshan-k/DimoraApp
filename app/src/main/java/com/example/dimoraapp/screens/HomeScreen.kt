@@ -18,9 +18,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -35,9 +34,12 @@ import com.example.dimoraapp.model.Picture
 import com.example.dimoraapp.data.Datasource
 import com.example.dimoraapp.navigation.BottomNavBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+
     var isDrawerOpen by remember { mutableStateOf(false) }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -47,24 +49,30 @@ fun HomeScreen(navController: NavController) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                TopNavBar(onMenuClick = { isDrawerOpen = true })
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item { Heading("House") }
-                    item { PicturesApp(navController) }
-                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
-                    item { Heading("Villa") }
-                    item { PicturesApp(navController) }
-                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
-                    item { Heading("Guest House") }
-                    item { PicturesApp(navController) }
-                    item { MoreButton(onClick = { /* Navigate to a new page */ }) }
-                }
-                BottomNavBar(navController = navController)
+                Scaffold(
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = { TopNavBar(onMenuClick = { isDrawerOpen = true }, scrollBehavior = scrollBehavior) },
+                    bottomBar = { BottomNavBar(navController = navController) },
+                    content = { paddingValues ->
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .padding(paddingValues), // Add padding from Scaffold
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            item { Heading("House") }
+                            item { PicturesApp(navController) }
+                            item { MoreButton(onClick = { navController.navigate("morehousescreen") }) }
+                            item { Heading("Villa") }
+                            item { PicturesApp(navController) }
+                            item { MoreButton(onClick = { navController.navigate("morehousescreen") }) }
+                            item { Heading("Guest House") }
+                            item { PicturesApp(navController) }
+                            item { MoreButton(onClick = { navController.navigate("morehousescreen") }) }
+                        }
+                    }
+                )
             }
 
             AnimatedVisibility(
@@ -81,11 +89,9 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(onMenuClick: () -> Unit) {
+fun TopNavBar(onMenuClick: () -> Unit, scrollBehavior: TopAppBarScrollBehavior) {
     TopAppBar(
         title = {},
         actions = {
@@ -101,11 +107,13 @@ fun TopNavBar(onMenuClick: () -> Unit) {
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent, // Ensures full transparency
-            scrolledContainerColor = Color.Transparent // Ensures it remains transparent on scroll
-        )
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent
+        ),
+        scrollBehavior = scrollBehavior // Attach scroll behavior
     )
 }
+
 
 
 @Composable
@@ -127,6 +135,7 @@ fun MoreButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .height(50.dp)
             .padding(end = 16.dp),
         contentAlignment = Alignment.CenterEnd
     ) {
@@ -223,7 +232,7 @@ fun PictureList(pictureList: List<Picture>, navController: NavController, modifi
                     modifier = Modifier
                         .align(Alignment.Center)
                         .background(
-                            color = Color(0xFFEFEFE9),
+                            color = MaterialTheme.colorScheme.tertiary,
                             shape = CircleShape
                         )
                         .padding(8.dp)
@@ -283,7 +292,7 @@ fun SideNavBar(onClose: () -> Unit, onAboutUsClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Build,
+                    painter = painterResource(R.drawable.baseline_dark_mode_24),
                     contentDescription = "Dark Mode",
                     tint = MaterialTheme.colorScheme.surface
                 )

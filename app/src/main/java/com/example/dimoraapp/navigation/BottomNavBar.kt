@@ -17,6 +17,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +36,9 @@ import com.example.dimoraapp.R
 
 @Composable
 fun BottomNavBar(navController: NavController) {
+
+    var selectedTab by remember { mutableStateOf("") }
+
     NavigationBar(
         modifier = Modifier
             .shadow(3.dp, shape = RectangleShape),
@@ -39,7 +46,10 @@ fun BottomNavBar(navController: NavController) {
     ) {
         NavigationBarItem(
             icon = {
-                Icon(Icons.Filled.Home, contentDescription = "Home", tint = MaterialTheme.colorScheme.surface)
+                Icon(Icons.Filled.Home, contentDescription = "Home",
+                    tint = if (selectedTab == "home") MaterialTheme.colorScheme.scrim
+                    else MaterialTheme.colorScheme.surface
+                )
             },
             label = {
                 Text(
@@ -47,13 +57,17 @@ fun BottomNavBar(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             },
             selected = false,
-            onClick = { navController.navigate("homescreen") }
-
+            onClick = {
+                navController.navigate("homescreen")
+                selectedTab = "home"
+            }
         )
 
         NavigationBarItem(
             icon = {
-                Icon(Icons.Filled.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.surface)
+                Icon(Icons.Filled.Search, contentDescription = "Search",
+                    tint = if (selectedTab == "search") MaterialTheme.colorScheme.scrim
+                    else MaterialTheme.colorScheme.surface)
             },
             label = {
                 Text(
@@ -61,7 +75,9 @@ fun BottomNavBar(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             },
             selected = false,
-            onClick = { navController.navigate("searchscreen") }
+            onClick = { navController.navigate("searchscreen")
+                selectedTab = "search"
+            }
         )
 
         NavigationBarItem(
@@ -75,7 +91,9 @@ fun BottomNavBar(navController: NavController) {
                         }
                     }
                 ) {
-                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications", tint = MaterialTheme.colorScheme.surface)
+                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications",
+                        tint = if (selectedTab == "notification") MaterialTheme.colorScheme.scrim
+                        else MaterialTheme.colorScheme.surface)
                 }
             },
             label = {
@@ -84,7 +102,8 @@ fun BottomNavBar(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             },
             selected = false,
-            onClick = { navController.navigate("notificationscreen") }
+            onClick = { navController.navigate("notificationscreen")
+                selectedTab = "notification"}
         )
 
         NavigationBarItem(

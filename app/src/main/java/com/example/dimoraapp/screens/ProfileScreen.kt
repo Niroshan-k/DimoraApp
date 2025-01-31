@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,28 +14,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,24 +40,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dimoraapp.R
 import com.example.dimoraapp.navigation.BottomNavBar
-import com.example.dimoraapp.ui.theme.DMserif
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController){
     var isDrawerOpen by remember { mutableStateOf(false) }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -75,16 +66,22 @@ fun ProfileScreen(navController: NavController){
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                TopNavBar(onMenuClick = { isDrawerOpen = true })
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item { content() }
-                }
-                BottomNavBar(navController = navController)
+                Scaffold(
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = { TopNavBar(onMenuClick = { isDrawerOpen = true }, scrollBehavior = scrollBehavior) },
+                    bottomBar = { BottomNavBar(navController = navController) },
+                    content = { paddingValues ->
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .padding(paddingValues),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            item { content(navController) }
+                        }
+                    }
+                )
             }
 
             AnimatedVisibility(
@@ -94,51 +91,68 @@ fun ProfileScreen(navController: NavController){
             ) {
                 SideNavBar(
                     onClose = { isDrawerOpen = false },
-                    onAboutUsClick = { navController.navigate("about_us") }
+                    onAboutUsClick = { navController.navigate("profilescreen") }
                 )
             }
         }
     }
 }
 @Composable
-fun content() {
+fun content(navController: NavController) {
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     if (isLandscape)
-    LazyRow(
+    Row(
         modifier = Modifier.padding(start = 100.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        item { Profilepicture() }
-        item { ProfileDetails() }
+        Profilepicture()
+        ProfileDetails(onClick = { navController.navigate("signin")})
     }
     else
         Column {
             Profilepicture()
-            ProfileDetails()
+            ProfileDetails(onClick = { navController.navigate("signin")})
         }
 }
 
 @Composable
 fun Profilepicture () {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    if (isLandscape)
     Box(
         modifier = Modifier
-            .fillMaxWidth()
             .height(300.dp),
         contentAlignment = Alignment.Center
     ){
         Image(
             modifier = Modifier.clip(CircleShape),
             painter = painterResource(R.drawable.profile),
-            contentDescription = "profile"
+            contentDescription = "profile",
+            alignment = Alignment.Center
         )
     }
+    else
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+            contentAlignment = Alignment.Center
+        ){
+            Image(
+                modifier = Modifier.clip(CircleShape),
+                painter = painterResource(R.drawable.profile),
+                contentDescription = "profile",
+                alignment = Alignment.Center
+            )
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileDetails() {
+fun ProfileDetails(onClick: () -> Unit) {
     val email = remember { mutableStateOf("example@gmail.com") }
     val username = remember { mutableStateOf("user123") }
     val contact = remember { mutableStateOf("") }
@@ -172,7 +186,8 @@ fun ProfileDetails() {
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    focusedLabelColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
@@ -203,7 +218,8 @@ fun ProfileDetails() {
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                containerColor = MaterialTheme.colorScheme.tertiary
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                focusedLabelColor = MaterialTheme.colorScheme.surface
             )
         )
 
@@ -234,10 +250,11 @@ fun ProfileDetails() {
             ){
                 Button(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .height(50.dp)
                         .padding(start = padding, end = padding)
                         .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-                    onClick = { },
+                    onClick = { onClick() },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Red,
                         contentColor = Color.White

@@ -21,14 +21,16 @@ private val DarkColorScheme = darkColorScheme(
     secondary = darkgreen,
     tertiary = darkyellow,
     background = darkbackground,
-    surface = darklight
+    surface = darklight,
+    scrim = icon
 )
 private val LightColorScheme = lightColorScheme(
     primary = lightbrown,
     secondary = lightgreen,
     tertiary = lightyellow,
     background = lightbackground,
-    surface = lightdark
+    surface = lightdark,
+    scrim = icon
 )
 
 val DMserif = FontFamily(

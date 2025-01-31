@@ -23,9 +23,9 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "getStarted"
+        startDestination = "getstarted"
     ) {
-        composable("getStarted") { GetStartedScreen(navController) }
+        composable("getstarted") { GetStartedScreen(navController) }
         composable("signup") { SignUpScreen(navController) }
         composable("signin") { SignInScreen(navController) }
         composable("homescreen") { HomeScreen(navController) }
