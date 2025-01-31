@@ -39,6 +39,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,17 +51,26 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.dimoraapp.R
 import com.example.dimoraapp.data.Datasource
 import com.example.dimoraapp.model.PictureInfo
 import com.example.dimoraapp.navigation.BottomNavBar
 import com.example.dimoraapp.ui.theme.DMserif
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
@@ -467,8 +477,48 @@ fun HouseDetails() {
 
         )
         Form()
+        //GoogleMapScreen()
     }
 }
+@Composable
+fun GoogleMapScreen() {
+    val context = LocalContext.current
+    val mapView = remember { MapView(context) }
+
+    LaunchedEffect(mapView) {
+        mapView.onCreate(null)
+        mapView.onResume()
+    }
+
+    AndroidView(
+        factory = { mapView },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    )
+}
+
+@Composable
+fun MapScreen() {
+    Box(modifier = Modifier) {
+        val singapore = LatLng(1.3521, 103.8198) // Example: Singapore location
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(singapore, 12f)
+        }
+
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState
+        ) {
+            Marker(
+                state = rememberMarkerState(position = singapore),
+                title = "Singapore",
+                snippet = "A beautiful place!"
+            )
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
